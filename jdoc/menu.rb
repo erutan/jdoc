@@ -10,7 +10,7 @@ module Jekyll::JDoc
     def render(context)
       @current_path = DocumentationFile.current_path(context)
       html = ""
-      html << content_tag("ul", :id => "sections", :class => "doc-nav") do
+      html << content_tag("ul", :class => "left") do #foundation support
         render_directory(DocumentationFile.documentation_directory, :show_directory => false)
       end
       html
@@ -61,10 +61,10 @@ module Jekyll::JDoc
 
     def attributes_for_ul(path)
       attributes = {}
-      attributes[:class] = []
-      if ul_is_in_current_tree?(path)
-        attributes[:class] << "in-active-tree"
-      end
+      attributes[:class] = ["dropdown"] #foundation support
+       if ul_is_in_current_tree?(path)
+         attributes[:class] << "in-active-tree"
+       end
       attributes.delete(:class) if attributes[:class].empty?
       attributes
     end
@@ -75,9 +75,12 @@ module Jekyll::JDoc
       if is_current_path?(path)
         attributes[:class] << "active"
       end
-      if li_is_in_current_tree?(path)
-        attributes[:class] << "in-active-tree"
-      end
+    if !DocumentationFile.sorted_children_paths(path).nil? && !DocumentationFile.sorted_children_paths(path).empty? #foundation support
+    attributes[:class] << "has-dropdown" #foundation support
+    end #foundation support
+        if li_is_in_current_tree?(path)
+          attributes[:class] << "in-active-tree"
+        end
       attributes.delete(:class) if attributes[:class].empty?
       attributes
     end
